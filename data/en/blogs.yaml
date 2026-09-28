@@ -1,0 +1,12 @@
+blogs:
+  - title: "Testing asyncronous systems"
+    date: "2026-09-01"
+    summary: "How timing, ordering, and eventual consistency make async systems hard to test reliably — and patterns that help."
+    tags: ["Testing", "Async", "Distributed Systems"]
+    link: "/blogs/testing-challenges-for-async-systems/"
+
+  - title: "Reduce test flakiness"
+    date: "2026-07-20"
+    summary: "Common causes of flaky tests in CI and concrete tactics to drive flakiness down without slowing delivery."
+    tags: ["Flakiness", "CI/CD", "Test Automation"]
+    link: "/blogs/reduce-test-flakiness/"

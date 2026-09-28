@@ -12,11 +12,7 @@
         <div class="max-w-3xl ml-0 p-4 pb-2 border border-border-primary-light dark:border-border-primary-dark rounded-lg bg-bg-secondary-light dark:bg-bg-secondary-dark shadow-lg relative">
             <div class="text-left">
                 <h1 class="text-4xl font-bold mb-2 text-text-primary-light dark:text-text-primary-dark">{{ .name }}</h1>
-                <p class="text-gray-400 mb-3 flex items-center text-xl">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-400" width="24" height="24" viewBox="-7 -2 24 24"><path fill="currentColor" d="M4 9.9A5.002 5.002 0 0 1 5 0a5 5 0 0 1 1 9.9V19a1 1 0 0 1-2 0V9.9zM5 8a3 3 0 1 0 0-6a3 3 0 0 0 0 6z"/></svg>
-                    {{ .location }}
-                </p>
-                <p class="text-xl mb-6 text-text-primary-light dark:text-text-primary-dark">{{ .description }}</p>
+                <p class="text-xl mb-6 text-text-primary-light dark:text-text-primary-dark">{{ .description | safeHTML }}</p>
             </div>
             <!-- Social Icons - Moved to bottom for mobile -->
             <div class="mt-8 md:mt-0 flex flex-wrap justify-center gap-3 md:absolute md:top-4 md:right-4 md:flex-nowrap md:justify-end md:mt-0">
@@ -339,14 +335,17 @@
         </div>
         <div class="space-y-8 max-w-3xl mx-auto">
             {{ range first 3 . }}
+            {{ $isExternal := or (hasPrefix .link "http://") (hasPrefix .link "https://") }}
             <div class="group">
                 <p class="text-gray-400 text-sm mb-1">{{ .date }}</p>
-                <a href="{{ .link }}" class="block group" target="_blank">
+                <a href="{{ if $isExternal }}{{ .link }}{{ else }}{{ .link | relLangURL }}{{ end }}" class="block group"{{ if $isExternal }} target="_blank" rel="noopener noreferrer"{{ end }}>
                     <h3 class="inline-flex items-center text-xl font-medium text-accent-light dark:text-accent-dark hover:text-text-primary-light dark:hover:text-text-primary-dark transition-colors duration-200 mb-3">
                         {{ .title }}
+                        {{ if $isExternal }}
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2 opacity-70 group-hover:opacity-100 transition-opacity duration-200">
                             <path d="M7 17l9.2-9.2M17 17V7H7"/>
                         </svg>
+                        {{ end }}
                     </h3>
                 </a>    
                 <p class="text-gray-400">{{ .summary }}</p>
