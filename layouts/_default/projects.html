@@ -1,0 +1,50 @@
+{{ define "main" }}
+<div class="w-full md:w-3/4 lg:w-1/2 mx-auto px-4 py-12">
+    <h1 class="text-3xl md:text-5xl font-bold mb-8 md:mb-12 text-text-primary-light dark:text-text-primary-dark">{{ .Title }}</h1>
+
+    {{ $projects := partial "github-projects.html" . }}
+
+    <div class="grid grid-cols-1 gap-6 md:gap-8 max-w-3xl mx-auto">
+        {{ range $projects }}
+        {{ partial "project-card.html" (dict "repo" . "variant" "page") }}
+        {{ else }}
+        <p class="text-text-secondary-light dark:text-text-secondary-dark">No public projects found.</p>
+        {{ end }}
+    </div>
+</div>
+
+<style>
+.project-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+    border-color: rgba(2, 132, 199, 0.5);
+}
+html.dark .project-card:hover {
+    border-color: rgba(14, 165, 233, 0.5);
+}
+
+.aspect-w-16 {
+    position: relative;
+    padding-bottom: 56.25%;
+}
+
+@media (max-width: 768px) {
+    .project-card:hover {
+        transform: none;
+    }
+
+    .project-card .group-hover\:translate-y-\[-20px\] {
+        transform: translateY(-10px);
+    }
+}
+</style>
+{{ end }}

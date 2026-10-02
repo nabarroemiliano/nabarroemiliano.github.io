@@ -1,0 +1,34 @@
+{{/*
+  Fetches personal GitHub repos for site.Params.github_username at build time.
+  Filters out forks, archived repos, and names in site.Params.github_projects_exclude.
+  Returns a slice of GitHub repo objects (sorted by updated, newest first).
+*/}}
+{{ $username := site.Params.github_username }}
+{{ $exclude := site.Params.github_projects_exclude | default (slice) }}
+{{ $filtered := slice }}
+
+{{ if $username }}
+  {{ $url := printf "https://api.github.com/users/%s/repos?type=owner&sort=updated&per_page=30" $username }}
+  {{ $opts := dict
+    "headers" (dict
+      "Accept" "application/vnd.github+json"
+      "User-Agent" (printf "hugo-portfolio-%s" $username)
+    )
+  }}
+  {{ with try (resources.GetRemote $url $opts) }}
+    {{ with .Err }}
+      {{ warnf "Failed to fetch GitHub repos: %s" . }}
+    {{ else with .Value }}
+      {{ $repos := . | transform.Unmarshal }}
+      {{ range $repos }}
+        {{ if and (not .fork) (not .archived) (not (in $exclude .name)) }}
+          {{ $filtered = $filtered | append . }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ else }}
+  {{ warnf "params.github_username is not set; cannot fetch GitHub projects." }}
+{{ end }}
+
+{{ return $filtered }}

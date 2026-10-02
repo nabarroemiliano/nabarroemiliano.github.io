@@ -98,6 +98,7 @@ defaultContentLanguageInSubdir = true # Creates URLs like /en/blog/
   email = "nabarroemiliano@gmail.com"
   github = "https://github.com/nabarroemiliano"
   github_username = "nabarroemiliano"
+  github_projects_exclude = ["nabarroemiliano.github.io"]
   linkedin = "https://linkedin.com/in/emilianonabarro"
   linkedin_username = "emilianonabarro"
   # Add other social links as needed by the theme or your content
@@ -155,4 +156,9 @@ defaultContentLanguageInSubdir = true # Creates URLs like /en/blog/
   [[menu.main]]
     name = "Contact Me" # Note: "Contact" is used in language-specific menus above for consistency
     pageRef = "/contact"
-    weight = 5 
+    weight = 5
+
+# Allow build-time fetch of GitHub repos for the projects section
+[security.http]
+  methods = ["^GET$"]
+  urls = ["^https://api\\.github\\.com/.*"] 
