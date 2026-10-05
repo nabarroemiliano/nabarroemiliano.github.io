@@ -93,7 +93,7 @@ defaultContentLanguageInSubdir = true # Creates URLs like /en/blog/
   # This is used by the theme for the author name in the footer, social links, etc.
   name = "Emiliano Nabarro"
   profile_image = "/images/profile_placeholder.jpg" # Place in your site's static/images/ directory
-  description = "Lead QA / Software Engineer QA"
+  description = "Lead QA / Senior Software Engineer QA"
   # Social and contact information
   email = "nabarroemiliano@gmail.com"
   github = "https://github.com/nabarroemiliano"
