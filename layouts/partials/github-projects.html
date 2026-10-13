@@ -1,14 +1,16 @@
 {{/*
   Fetches personal GitHub repos for site.Params.github_username at build time.
-  Filters out forks, archived repos, and names in site.Params.github_projects_exclude.
-  Returns a slice of GitHub repo objects (sorted by updated, newest first).
+  Only includes repos named in site.Params.github_projects_include (whitelist order).
+  Returns a slice of GitHub repo objects.
 */}}
 {{ $username := site.Params.github_username }}
-{{ $exclude := site.Params.github_projects_exclude | default (slice) }}
+{{ $include := site.Params.github_projects_include | default (slice) }}
 {{ $filtered := slice }}
 
-{{ if $username }}
-  {{ $url := printf "https://api.github.com/users/%s/repos?type=owner&sort=updated&per_page=30" $username }}
+{{ if not $include }}
+  {{ warnf "params.github_projects_include is empty; no projects will be shown." }}
+{{ else if $username }}
+  {{ $url := printf "https://api.github.com/users/%s/repos?type=owner&sort=updated&per_page=100" $username }}
   {{ $opts := dict
     "headers" (dict
       "Accept" "application/vnd.github+json"
@@ -20,9 +22,16 @@
       {{ warnf "Failed to fetch GitHub repos: %s" . }}
     {{ else with .Value }}
       {{ $repos := . | transform.Unmarshal }}
-      {{ range $repos }}
-        {{ if and (not .fork) (not .archived) (not (in $exclude .name)) }}
-          {{ $filtered = $filtered | append . }}
+      {{ range $name := $include }}
+        {{ $match := false }}
+        {{ range $repos }}
+          {{ if and (eq .name $name) (not .fork) (not .archived) }}
+            {{ $filtered = $filtered | append . }}
+            {{ $match = true }}
+          {{ end }}
+        {{ end }}
+        {{ if not $match }}
+          {{ warnf "Whitelisted GitHub project %q not found (or is a fork/archived)." $name }}
         {{ end }}
       {{ end }}
     {{ end }}

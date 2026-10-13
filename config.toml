@@ -98,7 +98,9 @@ defaultContentLanguageInSubdir = true # Creates URLs like /en/blog/
   email = "nabarroemiliano@gmail.com"
   github = "https://github.com/nabarroemiliano"
   github_username = "nabarroemiliano"
-  github_projects_exclude = ["nabarroemiliano.github.io"]
+  # Only these public repos appear on the Projects page / home preview (order preserved).
+  github_projects_include = ["contract-testing", "self-healing-test-framework"]
+
   linkedin = "https://linkedin.com/in/emilianonabarro"
   linkedin_username = "emilianonabarro"
   # Add other social links as needed by the theme or your content
